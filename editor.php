@@ -31,35 +31,57 @@ if ($postId) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $isEdit ? 'Edit Post' : 'New Post'; ?> - Blog Sphere</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <div class="auth-wrapper" style="align-items: flex-start; padding-top: 50px;">
-        <div class="auth-container" style="max-width: 600px;">
-            <h2><?php echo $isEdit ? 'Edit Post' : 'Create New Post'; ?></h2>
-            
-            <form method="POST" action="api/<?php echo $isEdit ? 'update_post.php' : 'create_post.php'; ?>">
-                <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
-                <?php if ($isEdit): ?>
-                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($postId); ?>">
-                <?php endif; ?>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.php" class="navbar-brand">Blog Sphere</a>
+            <div class="nav-links">
+                <a href="index.php" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </nav>
 
+    <main class="container editor-container">
+        <div class="editor-header">
+            <h2><?php echo $isEdit ? 'Edit Post' : 'Create New Post'; ?></h2>
+        </div>
+        
+        <form method="POST" action="api/<?php echo $isEdit ? 'update_post.php' : 'create_post.php'; ?>" class="editor-form-grid">
+            <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
+            <?php if ($isEdit): ?>
+                <input type="hidden" name="id" value="<?php echo htmlspecialchars($postId); ?>">
+            <?php endif; ?>
+
+            <div class="editor-column">
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required placeholder="Enter post title">
                 </div>
                 
-                <div class="form-group">
-                    <label for="content">Content (Markdown supported)</label>
-                    <textarea id="content" name="content" rows="10" required placeholder="Write your post content here..." style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; resize: vertical;"><?php echo htmlspecialchars($content); ?></textarea>
+                <div class="form-group flex-grow">
+                    <label for="content">Markdown Content</label>
+                    <textarea id="content" name="content" required placeholder="Write your post content here using Markdown..."><?php echo htmlspecialchars($content); ?></textarea>
                 </div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="btn"><?php echo $isEdit ? 'Update Post' : 'Publish Post'; ?></button>
-                    <a href="index.php" class="btn" style="background-color: var(--text-muted); text-align: center; text-decoration: none;">Cancel</a>
+            </div>
+
+            <div class="preview-column">
+                <label>Live Preview</label>
+                <div id="preview-pane" class="markdown-body">
+                    <!-- Preview HTML will be injected here by JS -->
                 </div>
-            </form>
-        </div>
-    </div>
+            </div>
+            
+            <div class="editor-actions">
+                <button type="submit" class="btn btn-primary"><?php echo $isEdit ? 'Update Post' : 'Publish Post'; ?></button>
+                <a href="index.php" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </main>
+
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
