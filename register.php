@@ -50,11 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Blog Sphere</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="auth-wrapper">
         <div class="auth-container">
+            <img src="assets/images/blog-logo.png" alt="Blog Sphere Logo" class="auth-logo">
             <h2>Create an Account</h2>
             <p class="subtitle">Join Blog Sphere today</p>
             
@@ -82,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" id="password" name="password" required placeholder="Create a password">
                 </div>
                 
-                <button type="submit" class="btn">Register</button>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
             </form>
             
             <p class="auth-link">Already have an account? <a href="login.php">Login here</a></p>

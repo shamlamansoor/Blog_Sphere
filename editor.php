@@ -34,11 +34,16 @@ if ($postId) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Marked.js for Markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- DOMPurify for XSS sanitization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.php" class="navbar-brand">Blog Sphere</a>
+            <a href="index.php" class="navbar-brand">
+                <img src="assets/images/blog-logo.png" alt="Logo" class="nav-logo">
+                Blog Sphere
+            </a>
             <div class="nav-links">
                 <a href="index.php" class="btn btn-secondary">Back to Home</a>
             </div>

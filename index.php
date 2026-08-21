@@ -24,11 +24,13 @@ $posts = $stmt->fetchAll();
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.php" class="navbar-brand">Blog Sphere</a>
+            <a href="index.php" class="navbar-brand">
+                <img src="assets/images/blog-logo.png" alt="Blog Sphere Logo" class="nav-logo">
+                Blog Sphere
+            </a>
             <div class="nav-links">
                 <?php if (isLoggedIn()): ?>
                     <span class="nav-welcome">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
-                    <a href="editor.php" class="btn btn-primary">New Post</a>
                     <a href="logout.php" class="btn btn-secondary">Logout</a>
                 <?php else: ?>
                     <a href="login.php" class="btn btn-secondary">Login</a>
@@ -38,12 +40,24 @@ $posts = $stmt->fetchAll();
         </div>
     </nav>
 
+    <header class="hero">
+        <div class="container">
+            <div class="hero-welcome">Welcome to Blog Sphere</div>
+            <h1>Write. Share. Inspire.</h1>
+            <p>Discover stories, share your ideas, and connect through words.</p>
+            <?php if (isLoggedIn()): ?>
+                <a href="editor.php" class="btn btn-primary">+ Create New Post</a>
+            <?php endif; ?>
+        </div>
+    </header>
+
     <main class="container">
         <?php if (empty($posts)): ?>
             <div class="empty-state">
                 <h2>No posts yet.</h2>
+                <p>Be the first to share your story.</p>
                 <?php if (isLoggedIn()): ?>
-                    <p>Be the first to <a href="editor.php">write a post</a>!</p>
+                    <a href="editor.php" class="btn btn-primary">Create Post</a>
                 <?php endif; ?>
             </div>
         <?php else: ?>
@@ -62,7 +76,7 @@ $posts = $stmt->fetchAll();
                         <?php if (isLoggedIn() && getCurrentUserId() === $post['user_id']): ?>
                             <div class="post-actions">
                                 <a href="editor.php?id=<?php echo $post['id']; ?>" class="btn-small btn-edit">Edit</a>
-                                <form method="POST" action="api/delete_post.php" class="form-delete">
+                                <form method="POST" action="api/delete_post.php" class="form-delete" style="display:inline;">
                                     <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
                                     <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
                                     <button type="submit" class="btn-small btn-delete">Delete</button>

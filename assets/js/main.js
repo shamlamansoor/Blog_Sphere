@@ -9,15 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Safe Markdown Rendering Function
+    const renderMarkdownSafely = (rawContent) => {
+        if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+            const rawHtml = marked.parse(rawContent);
+            return DOMPurify.sanitize(rawHtml);
+        }
+        return "Error: Markdown parser or Sanitizer not loaded.";
+    };
+
     // Markdown Editor Live Preview
     const contentTextarea = document.getElementById('content');
     const previewPane = document.getElementById('preview-pane');
 
-    if (contentTextarea && previewPane && typeof marked !== 'undefined') {
+    if (contentTextarea && previewPane) {
         const updatePreview = () => {
-            const rawContent = contentTextarea.value;
-            // Use marked library to parse markdown to HTML
-            previewPane.innerHTML = marked.parse(rawContent);
+            previewPane.innerHTML = renderMarkdownSafely(contentTextarea.value);
         };
 
         // Initial preview
@@ -29,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Single Post Markdown Rendering
     const postContentElement = document.getElementById('post-content-raw');
-    if (postContentElement && typeof marked !== 'undefined') {
+    if (postContentElement) {
         const rawContent = postContentElement.textContent || postContentElement.innerText;
-        const renderedHtml = marked.parse(rawContent);
+        const renderedHtml = renderMarkdownSafely(rawContent);
         
         // Hide the raw element and show a new one with rendered HTML
         postContentElement.style.display = 'none';
