@@ -5,7 +5,7 @@ require_once 'includes/functions.php';
 
 // Fetch all posts
 $stmt = $pdo->query("
-    SELECT p.id, p.title, p.content, p.created_at, p.user_id, u.username 
+    SELECT p.id, p.title, p.content, p.created_at, p.user_id, p.image, u.username 
     FROM blogPost p 
     JOIN user u ON p.user_id = u.id 
     ORDER BY p.created_at DESC
@@ -64,6 +64,9 @@ $posts = $stmt->fetchAll();
             <div class="posts-grid">
                 <?php foreach ($posts as $post): ?>
                     <article class="post-card">
+                        <?php if (!empty($post['image'])): ?>
+                            <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Featured Image" class="post-card-image">
+                        <?php endif; ?>
                         <h2 class="post-title"><a href="post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h2>
                         <div class="post-meta">
                             By <strong><?php echo htmlspecialchars($post['username']); ?></strong> on <?php echo date('M j, Y', strtotime($post['created_at'])); ?>

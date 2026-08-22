@@ -63,6 +63,10 @@ if (!$post) {
                 <?php endif; ?>
             </div>
             
+            <?php if (!empty($post['image'])): ?>
+                <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Featured Image" class="post-image">
+            <?php endif; ?>
+            
             <div id="post-content-raw" style="display: none;">
                 <?php echo htmlspecialchars($post['content']); ?>
             </div>

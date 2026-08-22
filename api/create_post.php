@@ -19,13 +19,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $userId = getCurrentUserId();
+    $imagePath = null;
+
+    if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $uploadResult = uploadImage($_FILES['image']);
+        if (isset($uploadResult['error'])) {
+            die($uploadResult['error']);
+        }
+        $imagePath = $uploadResult;
+    }
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO blogPost (user_id, title, content) VALUES (:user_id, :title, :content)");
+        $stmt = $pdo->prepare("INSERT INTO blogPost (user_id, title, content, image) VALUES (:user_id, :title, :content, :image)");
         $stmt->execute([
             'user_id' => $userId,
             'title' => $title,
-            'content' => $content
+            'content' => $content,
+            'image' => $imagePath
         ]);
         
         // Redirect to home page on success

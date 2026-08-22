@@ -13,7 +13,7 @@ $isEdit = false;
 if ($postId) {
     // Edit mode
     $isEdit = true;
-    $stmt = $pdo->prepare("SELECT title, content FROM blogPost WHERE id = :id AND user_id = :user_id");
+    $stmt = $pdo->prepare("SELECT title, content, image FROM blogPost WHERE id = :id AND user_id = :user_id");
     $stmt->execute(['id' => $postId, 'user_id' => getCurrentUserId()]);
     $post = $stmt->fetch();
 
@@ -22,6 +22,7 @@ if ($postId) {
     }
     $title = $post['title'];
     $content = $post['content'];
+    $currentImage = $post['image'] ?? null;
 }
 ?>
 <!DOCTYPE html>
@@ -55,7 +56,7 @@ if ($postId) {
             <h2><?php echo $isEdit ? 'Edit Post' : 'Create New Post'; ?></h2>
         </div>
         
-        <form method="POST" action="api/<?php echo $isEdit ? 'update_post.php' : 'create_post.php'; ?>" class="editor-form-grid">
+        <form method="POST" action="api/<?php echo $isEdit ? 'update_post.php' : 'create_post.php'; ?>" class="editor-form-grid" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
             <?php if ($isEdit): ?>
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($postId); ?>">
@@ -67,6 +68,23 @@ if ($postId) {
                     <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required placeholder="Enter post title">
                 </div>
                 
+                <div class="form-group">
+                    <label for="image">Featured Image</label>
+                    <?php if ($isEdit && !empty($currentImage)): ?>
+                        <div style="margin-bottom: 12px;">
+                            <p style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">Current Image:</p>
+                            <img src="<?php echo htmlspecialchars($currentImage); ?>" alt="Current image" style="max-height: 150px; border-radius: 4px; border: 1px solid var(--border);">
+                            <div style="margin-top: 8px;">
+                                <label style="display:inline-block; font-weight:normal; font-size: 13px;">
+                                    <input type="checkbox" name="remove_image" value="1"> Remove current image
+                                </label>
+                            </div>
+                        </div>
+                        <p style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">Replace Image (optional):</p>
+                    <?php endif; ?>
+                    <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png, .webp" style="background: white;">
+                </div>
+
                 <div class="form-group flex-grow">
                     <label for="content">Markdown Content</label>
                     <textarea id="content" name="content" required placeholder="Write your post content here using Markdown..."><?php echo htmlspecialchars($content); ?></textarea>

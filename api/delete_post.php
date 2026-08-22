@@ -20,12 +20,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Server-side ownership check
-        $checkStmt = $pdo->prepare("SELECT id FROM blogPost WHERE id = :id AND user_id = :user_id");
+        $checkStmt = $pdo->prepare("SELECT id, image FROM blogPost WHERE id = :id AND user_id = :user_id");
         $checkStmt->execute(['id' => $postId, 'user_id' => $userId]);
+        $existingPost = $checkStmt->fetch();
         
-        if (!$checkStmt->fetch()) {
+        if (!$existingPost) {
             http_response_code(403);
             die("Unauthorized access or post does not exist.");
+        }
+
+        // Delete the image file if it exists
+        if (!empty($existingPost['image']) && file_exists('../' . $existingPost['image'])) {
+            unlink('../' . $existingPost['image']);
         }
 
         $stmt = $pdo->prepare("DELETE FROM blogPost WHERE id = :id AND user_id = :user_id");
