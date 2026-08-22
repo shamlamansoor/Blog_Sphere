@@ -101,6 +101,7 @@ body {
     font-size: 40px;
     font-weight: 700;
     margin-bottom: 16px;
+    color: #000000;
 }
 .hero p {
     font-size: 18px;
@@ -109,6 +110,7 @@ body {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    color: #000000;
 }
 .hero .btn-primary {
     background: var(--card-bg);
@@ -493,4 +495,138 @@ body {
     #preview-pane { min-height: 250px; }
     .post-full { padding: 30px 20px; }
     .posts-grid { grid-template-columns: 1fr; }
+}
+
+/* Tabs */
+.tabs-container {
+    margin-top: 30px;
+}
+.tabs-header {
+    display: flex;
+    gap: 20px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.tab-btn:hover {
+    color: var(--primary);
+}
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* Profile Stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.stat-card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    text-align: center;
+    border: 1px solid var(--border);
+}
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+}
+.stat-label {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+/* Interactions (Comments & Questions) */
+.interaction-section {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+}
+.interaction-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.interaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.interaction-item {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow-wrap: anywhere;
+}
+.interaction-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.interaction-author {
+    font-weight: 600;
+}
+.interaction-date {
+    color: var(--muted);
+}
+.interaction-body {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+.interaction-actions {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+    align-items: center;
+}
+.btn-like {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.btn-like:hover {
+    background: #f1f5f9;
+}
+.btn-like.liked {
+    color: #e0245e;
+}
+.btn-like.liked .like-count {
+    color: #e0245e;
+}
+.form-inline {
+    display: none;
+    margin-top: 10px;
 }

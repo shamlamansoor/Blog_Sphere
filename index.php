@@ -3,13 +3,18 @@ require_once 'config/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/functions.php';
 
-// Fetch all posts
-$stmt = $pdo->query("
-    SELECT p.id, p.title, p.content, p.created_at, p.user_id, p.image, u.username 
+// Fetch all posts with like and comment counts
+$currentUserId = getCurrentUserId() ?: 0;
+$stmt = $pdo->prepare("
+    SELECT p.id, p.title, p.content, p.created_at, p.user_id, p.image, u.username,
+           (SELECT COUNT(*) FROM postLike WHERE post_id = p.id) as like_count,
+           (SELECT COUNT(*) FROM postComment WHERE post_id = p.id) as comment_count,
+           (SELECT COUNT(*) FROM postLike WHERE post_id = p.id AND user_id = :user_id) as user_liked
     FROM blogPost p 
     JOIN user u ON p.user_id = u.id 
     ORDER BY p.created_at DESC
 ");
+$stmt->execute(['user_id' => $currentUserId]);
 $posts = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -20,6 +25,7 @@ $posts = $stmt->fetchAll();
     <title>Blog Sphere - Home</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="csrf-token" content="<?php echo generateCsrfToken(); ?>">
 </head>
 <body>
     <nav class="navbar">
@@ -31,6 +37,7 @@ $posts = $stmt->fetchAll();
             <div class="nav-links">
                 <?php if (isLoggedIn()): ?>
                     <span class="nav-welcome">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
+                    <a href="profile.php" class="btn btn-secondary">My Profile</a>
                     <a href="logout.php" class="btn btn-secondary">Logout</a>
                 <?php else: ?>
                     <a href="login.php" class="btn btn-secondary">Login</a>
@@ -73,6 +80,18 @@ $posts = $stmt->fetchAll();
                         </div>
                         <div class="post-excerpt">
                             <?php echo htmlspecialchars(substr($post['content'], 0, 150)); ?><?php echo strlen($post['content']) > 150 ? '...' : ''; ?>
+                        </div>
+                        <div class="post-stats" style="font-size: 14px; color: var(--muted); margin-bottom: 16px; display: flex; gap: 15px; align-items: center;">
+                            <?php if (isLoggedIn()): ?>
+                                <button class="btn-like btn-like-index" data-id="<?php echo $post['id']; ?>" style="padding: 0; font-size: 14px;">
+                                    <?php echo $post['user_liked'] ? '❤️' : '♡'; ?> <span class="like-count"><?php echo $post['like_count']; ?></span>
+                                </button>
+                            <?php else: ?>
+                                <button class="btn-like btn-like-index" data-id="<?php echo $post['id']; ?>" style="padding: 0; font-size: 14px; background: transparent; border: none; cursor: pointer; color: inherit;">
+                                    ♡ <span class="like-count"><?php echo $post['like_count']; ?></span>
+                                </button>
+                            <?php endif; ?>
+                            <span>💬 <?php echo $post['comment_count']; ?></span>
                         </div>
                         <a href="post.php?id=<?php echo $post['id']; ?>" class="read-more">Read more &rarr;</a>
                         
